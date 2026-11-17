@@ -352,8 +352,9 @@ onAuthStateChanged(auth, async user => {
       if (params.get('t') === '1' || (!params.get('a') && loadLS('sm_teacher', false))) { booted = false; return teacherLogin(); }
       await signInAnonymously(auth); return;
     }
-    booted = true;
     IS_T = user.email === TEACHER_EMAIL;
+    if (!IS_T && params.get('t') === '1') { booted = false; return teacherLogin(); }
+    booted = true;
     if (IS_T) { saveLS('sm_teacher', true); return teacherStart(); }
     return studentStart(user);
   } catch (e) { fatal(e); }
@@ -377,7 +378,7 @@ function teacherLogin() {
     catch (e) { $('#terr').textContent = '이메일이나 비밀번호가 맞지 않아요.'; }
   };
   $('#tgo').onclick = go; $('#tp').onkeydown = e => { if (e.key === 'Enter') go(); };
-  $('#tback').onclick = async () => { saveLS('sm_teacher', false); history.replaceState(null, '', location.pathname); await signInAnonymously(auth); };
+  $('#tback').onclick = () => { saveLS('sm_teacher', false); location.href = location.pathname; };
 }
 
 const UI = { tab: '진로', subj: null, actId: null, sel: null, grp: null, stu: null };
