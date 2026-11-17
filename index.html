@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>활동 자료함</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --cabinet:#3b3f45; --cabinet-2:#4a4f56; --brass:#c9a85c;
+  --manila:#efe0b9; --paper:#fbf8f1; --ink:#24272b; --ink-2:#5d6168; --line:#d8cba6;
+  --stamp:#c23b2e; --stamp-blue:#2f5f8f; --warn:#9a5b00;
+  --t-자율:#8fae8b; --t-진로:#d08a5c; --t-동아리:#7d93b5; --t-교과:#d6b44e; --t-학생별:#b9a6c9; --t-명단:#c9c4b4;
+  --font-title:"Gowun Batang","Nanum Myeongjo",serif;
+  --font:"IBM Plex Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  --mono:"DM Mono",ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);font-size:16px;color:var(--ink);background:var(--cabinet);min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+input[type=text],input[type=password],input[type=date],input[type=url],input[type=search],input[type=number],select,textarea{
+  border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:#fff;min-height:40px}
+textarea{width:100%;line-height:1.6;resize:vertical}
+:focus-visible{outline:2.5px solid var(--ink);outline-offset:2px}
+.hidden{display:none!important}
+.muted{color:var(--ink-2);font-size:14px}
+.btn{border:1.5px solid var(--ink);background:var(--paper);border-radius:6px;padding:8px 13px;font-weight:600;font-size:14px;white-space:nowrap;min-height:40px}
+.btn.dark{background:var(--ink);color:var(--paper)}
+.btn.ghost{border-color:#a8956a;background:transparent;color:#5c4b22}
+.btn.danger{border-color:var(--stamp);color:var(--stamp)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.sm{padding:4px 9px;min-height:32px;font-size:13px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+h2,h3{font-family:var(--font-title)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:8px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:300;max-width:90vw}
+#toast.show{opacity:.96}
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.loading{color:#cfd3d8;font-size:16px}
+.errbox{background:var(--paper);border-radius:10px;padding:22px;max-width:460px;line-height:1.7}
+
+/* 교사 */
+.drawer{min-height:100vh;padding:18px 28px 28px;background:linear-gradient(180deg,var(--cabinet-2),var(--cabinet) 120px)}
+.top{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.plate{background:linear-gradient(180deg,#e2c77f,var(--brass));color:#3a2e12;border-radius:4px;padding:6px 18px;font-family:var(--font-title);font-weight:700;font-size:20px;box-shadow:inset 0 1px 0 #f3e2b0,0 2px 0 #00000055;letter-spacing:.04em}
+.plate small{font-family:var(--font);font-weight:500;font-size:12px;margin-left:8px;opacity:.75}
+.top .who{color:#cfd3d8;font-size:14px}
+.top .who button{background:none;border:1px solid #6b7078;color:#cfd3d8;border-radius:6px;padding:5px 10px;margin-left:8px}
+.tabs{display:flex;gap:4px;padding-left:10px;align-items:flex-end;overflow-x:auto}
+.tab{border:none;border-radius:10px 10px 0 0;padding:9px 20px 10px;font-weight:600;font-size:15px;color:#2a2a2a;background:var(--c);opacity:.72;position:relative;top:2px;white-space:nowrap}
+.tab.on{opacity:1;padding-bottom:14px;top:0}
+.tab .n{font-family:var(--mono);font-size:12px;margin-left:6px;opacity:.7}
+.sheet{background:var(--manila);border-radius:0 12px 12px 12px;padding:18px 22px 22px;border-top:6px solid var(--c);box-shadow:0 10px 30px #00000055;min-height:620px}
+.three{display:grid;grid-template-columns:230px 1fr 310px;gap:18px}
+.side h3,.right h3{margin:0 0 10px;font-size:17px}
+.subj{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.chip{border:1.5px solid var(--ink);background:transparent;border-radius:16px;padding:4px 12px;font-weight:600;font-size:14px;min-height:34px}
+.chip.on{background:var(--ink);color:var(--paper)}
+.alist{display:flex;flex-direction:column;gap:6px}
+.aitem{text-align:left;background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:6px;padding:9px 11px;font-size:14px;width:100%}
+.aitem b{display:block;font-size:15px}
+.aitem span{color:var(--ink-2);font-size:13px}
+.aitem.on{outline:2px solid var(--ink)}
+.newbtn{margin-top:6px;border:1.5px dashed #a8956a;background:transparent;border-radius:6px;padding:10px;color:#6b5a32;font-weight:600;width:100%}
+.head{display:flex;align-items:flex-start;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.head h2{margin:0;font-size:24px}
+.meta{color:var(--ink-2);font-size:14px;margin-top:4px}
+.count{display:flex;gap:14px;font-size:14px;margin:4px 0 12px;align-items:center;flex-wrap:wrap}
+.count .k{display:inline-flex;align-items:center;gap:5px}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+.bar{flex:1;height:8px;background:#d9c58f;border-radius:4px;overflow:hidden;max-width:220px;min-width:80px}
+.bar i{display:block;height:100%;background:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.card{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:5px;height:80px;padding:7px 8px;box-shadow:0 1px 0 #0000000f}
+.card .no{font-family:var(--mono);font-weight:500;font-size:15px}
+.card .nm{font-size:12px;color:var(--ink-2);margin-left:2px}
+.card .src{position:absolute;left:8px;bottom:7px;font-size:11px;color:var(--ink-2)}
+.card.none{background:transparent;border:1.5px dashed #b49f6a;box-shadow:none}
+.card.none .src{color:#8a7543}
+.card.sel{outline:2.5px solid var(--ink);outline-offset:1px}
+.stamp{position:absolute;right:5px;bottom:5px;width:38px;height:38px;border:2.5px solid var(--stamp);color:var(--stamp);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-weight:700;font-size:12px;transform:rotate(-14deg);opacity:.88;line-height:1.05;text-align:center;pointer-events:none}
+.stamp.blue{border-color:var(--stamp-blue);color:var(--stamp-blue);font-size:10px}
+.right{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 16px;position:relative;align-self:start;min-height:300px}
+.right .clip{position:absolute;top:-10px;left:24px;width:46px;height:20px;border:3px solid #9aa0a6;border-bottom:none;border-radius:8px 8px 0 0}
+.who2{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.who2 .no{font-family:var(--mono);font-size:22px;font-weight:500}
+.q{border-top:1px dashed var(--line);padding:9px 0}
+.q .qq{font-size:13px;color:var(--ink-2);font-weight:600}
+.q .aa{font-size:14.5px;line-height:1.6;margin-top:3px;white-space:pre-wrap;word-break:break-word}
+.file{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:6px;padding:7px 9px;margin-top:7px;font-size:14px;background:#fff;word-break:break-all}
+.file a{color:inherit}
+.ft{font-family:var(--mono);font-size:11px;font-weight:500;color:#fff;border-radius:3px;padding:3px 5px;background:#b5463c;flex:none}
+.file small{color:var(--ink-2);margin-left:auto;font-size:12px;flex:none}
+.empty{padding:30px 16px;text-align:center;color:var(--ink-2);border:1.5px dashed #b49f6a;border-radius:8px;line-height:1.7}
+.grp{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0 8px}
+.pick{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 16px}
+.pick button{font-family:var(--mono);border:1px solid #b49f6a;background:var(--paper);border-radius:4px;padding:4px 8px;font-size:14px;min-height:34px}
+.pick button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.col{background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.col h4{margin:0;padding:8px 12px;font-size:15px;background:var(--c);color:#222;display:flex}
+.col h4 span{margin-left:auto;font-family:var(--mono);font-weight:400;font-size:12px;opacity:.75}
+.col .it{padding:10px 12px;border-bottom:1px dashed var(--line);font-size:14px}
+.col .it b{display:block;font-size:14.5px}
+.col .it span{color:var(--ink-2);font-size:12.5px}
+.col .it.miss{color:#9a8a5c}
+.col .it details{margin-top:6px}
+.col .it summary{cursor:pointer;font-size:13px;color:var(--ink-2)}
+.pdfbox{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:12px 16px;margin-top:16px;flex-wrap:wrap}
+.pdfbox label{font-size:14px;display:flex;gap:6px;align-items:center}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:14px}
+.panel h3{margin:0 0 8px;font-size:18px}
+.gtable{width:100%;border-collapse:collapse;font-size:14px}
+.gtable th{text-align:left;color:var(--ink-2);font-weight:600;border-bottom:1px solid var(--line);padding:6px}
+.gtable td{border-bottom:1px dashed var(--line);padding:6px;vertical-align:middle}
+.gtable td.mono{font-family:var(--mono)}
+.drop{border:2px dashed #a8956a;border-radius:8px;padding:16px;text-align:center;color:#6b5a32;font-weight:600;background:#fff8;cursor:pointer}
+.drop.over{background:#fff;border-color:var(--ink)}
+.drop small{display:block;font-weight:400;font-size:13px;margin-top:4px;color:var(--ink-2)}
+.hint{font-size:13.5px;color:var(--ink-2);line-height:1.65}
+.warnline{background:#fff3d6;color:#6b4a00;border-radius:6px;padding:8px 10px;font-size:14px;line-height:1.6}
+
+/* 모달 */
+.modal{position:fixed;inset:0;background:rgba(20,22,26,.55);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
+.mbox{background:var(--manila);border-radius:12px;padding:20px 22px;width:min(640px,96vw);max-height:92vh;overflow:auto;box-shadow:0 20px 50px #0008}
+.mbox h3{margin:0 0 10px;font-size:20px}
+.mbox label.f{display:block;font-weight:600;font-size:14px;margin:12px 0 5px}
+.mbox input[type=text],.mbox input[type=date],.mbox select{width:100%}
+.mbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{display:flex;gap:5px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:14px}
+.qrbig{display:flex;flex-direction:column;align-items:center;gap:14px;padding:10px}
+.qrbig .url{font-family:var(--mono);font-size:15px;word-break:break-all;text-align:center;background:var(--paper);padding:8px 12px;border-radius:6px}
+.prog{font-size:14px;color:var(--ink-2);margin-top:8px;white-space:pre-wrap}
+
+/* 학생 */
+.phone{min-height:100vh;background:var(--manila);max-width:560px;margin:0 auto}
+.phead{background:var(--cabinet);color:#fff;padding:16px 18px 14px;display:flex;align-items:flex-end}
+.phead .t{font-family:var(--font-title);font-size:20px;font-weight:700}
+.phead .s{color:#cfd3d8;font-size:14px;margin-top:2px}
+.phead .s b{font-family:var(--mono);color:var(--brass);font-weight:500}
+.phead button{margin-left:auto;background:none;border:1px solid #6b7078;color:#cfd3d8;border-radius:6px;padding:6px 10px;font-size:13px;min-height:36px}
+.plist{padding:14px 14px 30px;display:flex;flex-direction:column;gap:12px}
+.sec{font-size:13px;font-weight:700;color:#6b5a32;margin:6px 4px -2px}
+.pf{position:relative;text-align:left;width:100%;background:var(--paper);border:1px solid var(--line);border-radius:4px 10px 10px 10px;padding:13px 14px 13px 16px;margin-top:22px;min-height:72px}
+.pf .tabl{position:absolute;top:-23px;left:-1px;background:var(--c);border-radius:8px 8px 0 0;padding:3px 12px;font-size:12.5px;font-weight:700;color:#222}
+.pf b{display:block;font-size:16.5px;padding-right:64px}
+.pf span{font-size:13.5px;color:var(--ink-2)}
+.pf .due{color:var(--stamp);font-weight:700}
+.pf .stamp{top:12px;bottom:auto;right:10px;width:50px;height:50px;font-size:14px}
+.sform{padding:14px 16px 40px}
+.back{border:none;background:none;font-size:15px;color:#6b5a32;padding:6px 0;font-weight:600;min-height:40px}
+.sform h2{font-size:21px;margin:6px 0 2px}
+.fq{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 13px;margin-bottom:10px}
+.fq label{display:block;font-weight:600;font-size:15px;margin-bottom:7px;white-space:pre-wrap}
+.fq label i{font-style:normal;font-family:var(--mono);color:var(--ink-2);margin-right:4px}
+.fq textarea{min-height:100px;font-size:15px}
+.submit{width:100%;margin-top:6px;border:none;background:var(--ink);color:var(--paper);border-radius:8px;padding:15px;font-size:17px;font-weight:700}
+.submit:disabled{opacity:.5}
+.saved{font-size:13px;color:var(--ink-2);text-align:center;margin-top:8px}
+.login{padding:28px 20px}
+.login h2{font-size:22px;margin:0 0 6px}
+.login label{display:block;font-weight:600;margin:16px 0 6px}
+.login input{width:100%;font-size:20px;font-family:var(--mono);letter-spacing:.06em}
+.tlink{display:block;margin:30px auto 0;background:none;border:none;color:#8a7543;font-size:13px;text-decoration:underline;min-height:40px}
+
+@media (max-width:1100px){.three{grid-template-columns:200px 1fr}.three .right{grid-column:1/-1}}
+@media (max-width:760px){
+  .drawer{padding:12px}
+  .three{grid-template-columns:1fr}
+  .sheet{padding:14px}
+  .head h2{font-size:20px}
+}
+@media print{
+  body{background:#fff}
+  body > *:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+}
+#printArea{display:none}
+.slips{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.slip{border:1px dashed #999;padding:10px 12px;font-size:12px;line-height:1.6;break-inside:avoid}
+.slip b{font-size:15px}
+.slip .code{font-family:var(--mono);font-size:20px;letter-spacing:.12em}
+</style>
+</head>
+<body>
+<div id="app"><div class="center"><div class="loading">불러오는 중…</div></div></div>
+<div id="printArea"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, collection, getDoc, getDocs, setDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* 우리 반 게시판과 같은 Firebase 프로젝트를 쓴다. 이 앱의 컬렉션은 모두 sm_ 로 시작한다. */
+const firebaseConfig = {
+  apiKey: "AIzaSyDEVJk1GOGjJdBfCJjuMyeXmzzKIw4wlKI",
+  authDomain: "classboard-4b9da.firebaseapp.com",
+  projectId: "classboard-4b9da",
+  storageBucket: "classboard-4b9da.firebasestorage.app",
+  messagingSenderId: "933415283397",
+  appId: "1:933415283397:web:87f93865e49a9e8d049eac"
+};
+const TEACHER_EMAIL = "hongjongtt@class.com";
+const AREAS = ['자율','진로','동아리','교과'];
+const KINDS = ['담임','교과','동아리'];
+const MAX_FILE_MB = 20, MAX_TEXT = 30000;
+const FONT_URLS = {
+  r:"https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/public/static/alternative/Pretendard-Regular.ttf",
+  b:"https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/public/static/alternative/Pretendard-Bold.ttf"
+};
+
+const fb = initializeApp(firebaseConfig);
+const auth = getAuth(fb);
+const db = getFirestore(fb);
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+/* ───────── 공통 ───────── */
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+let toastT;
+function toast(m, ms = 2400) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), ms); }
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const fmtDue = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); const w = '일월화수목금토'[new Date(+y, m-1, +dd).getDay()]; return `${+m}월 ${+dd}일(${w})`; };
+const fmtAt = t => { if (!t) return ''; const d = new Date(t); return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
+const dday = d => { if (!d) return null; const a = new Date(d + 'T00:00:00'), b = new Date(today() + 'T00:00:00'); return Math.round((a - b) / 864e5); };
+const isPast = d => d && dday(d) < 0;
+const areaColor = a => `var(--t-${AREAS.includes(a) ? a : '교과'})`;
+const subId = (aid, no) => `${aid}__${no}`;
+const normNo = v => { const s = String(v ?? '').replace(/\D/g, ''); return s.length === 5 ? s : ''; };
+const loadLS = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+const saveLS = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+
+function modal(html, { wide = false } = {}) {
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = `<div class="mbox" style="${wide ? 'width:min(900px,96vw)' : ''}" role="dialog" aria-modal="true">${html}</div>`;
+  m.addEventListener('mousedown', e => { if (e.target === m) m.remove(); });
+  document.body.appendChild(m);
+  return m;
+}
+function pickFile(accept, multiple = false) {
+  return new Promise(res => {
+    const i = document.createElement('input'); i.type = 'file'; i.accept = accept; i.multiple = multiple; i.hidden = true;
+    document.body.appendChild(i);
+    i.onchange = () => { res(multiple ? [...i.files] : i.files[0] || null); i.remove(); };
+    i.click();
+  });
+}
+function bindDrop(el, onFiles) {
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('over'); });
+  el.addEventListener('dragleave', () => el.classList.remove('over'));
+  el.addEventListener('drop', e => { e.preventDefault(); el.classList.remove('over'); onFiles([...e.dataTransfer.files]); });
+}
+const b64 = buf => { let s = ''; const u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
+const unb64 = s => { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; };
+
+/* ───────── 데이터 ───────── */
+let CFG = null;            // sm_config/main
+let ROSTER = {};           // 학번 → {name, code}  (교사만)
+let ACTS = [];             // 올해 활동
+let ME = null;             // 학생: {no}
+let IS_T = false;
+
+async function loadCfg() {
+  const s = await getDoc(doc(db, 'sm_config', 'main'));
+  CFG = s.exists() ? s.data() : null;
+  if (CFG) { CFG.groups = CFG.groups || []; }
+  return CFG;
+}
+async function saveCfg() { await setDoc(doc(db, 'sm_config', 'main'), CFG); }
+async function loadActs() {
+  const s = await getDocs(query(collection(db, 'sm_activities'), where('year', '==', CFG.year)));
+  ACTS = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+}
+async function loadRoster() {
+  const s = await getDocs(query(collection(db, 'sm_roster'), where('year', '==', CFG.year)));
+  ROSTER = {}; s.docs.forEach(d => { const v = d.data(); ROSTER[v.no] = v; });
+}
+async function subsOfAct(aid) {
+  const s = await getDocs(query(collection(db, 'sm_subs'), where('activityId', '==', aid)));
+  const m = {}; s.docs.forEach(d => { const v = d.data(); m[v.no] = v; }); return m;
+}
+async function subsOfStudent(no) {
+  const s = await getDocs(query(collection(db, 'sm_subs'), where('no', '==', no), where('year', '==', CFG.year)));
+  const m = {}; s.docs.forEach(d => { const v = d.data(); m[v.activityId] = v; }); return m;
+}
+const groupById = id => CFG.groups.find(g => g.id === id);
+const studentsOfAct = a => { const set = new Set(); (a.groupIds || []).forEach(id => (groupById(id)?.nos || []).forEach(n => set.add(n))); return [...set].sort(); };
+const groupsOfStudent = no => CFG.groups.filter(g => (g.nos || []).includes(no));
+const actsOfStudent = no => { const gs = new Set(groupsOfStudent(no).map(g => g.id)); return ACTS.filter(a => (a.groupIds || []).some(id => gs.has(id))); };
+const actLabel = a => a.area === '교과' ? (a.subject || '교과') : a.area;
+
+/* ───────── 드라이브(Apps Script) ───────── */
+async function callScript(payload) {
+  if (!CFG?.scriptUrl) throw new Error('선생님이 아직 드라이브를 연결하지 않았어요. (명단·설정 탭)');
+  const token = await auth.currentUser.getIdToken();
+  const r = await fetch(CFG.scriptUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ ...payload, token }) });
+  let j; try { j = await r.json(); } catch { throw new Error('드라이브 연결 응답을 읽지 못했어요. 주소와 배포 설정을 확인해 주세요.'); }
+  if (!j.ok) throw new Error(j.error || '드라이브 작업에 실패했어요.');
+  return j;
+}
+async function pdfInfo(buf) {
+  if (!window.pdfjsLib) return { pages: 0, text: '' };
+  const pdf = await pdfjsLib.getDocument({ data: buf.slice(0) }).promise;
+  let text = '';
+  for (let p = 1; p <= pdf.numPages && text.length < MAX_TEXT; p++) {
+    const page = await pdf.getPage(p); const c = await page.getTextContent();
+    let line = '', out = [], lastY = null;
+    for (const it of c.items) { const y = it.transform?.[5]; if (lastY !== null && Math.abs(y - lastY) > 2) { out.push(line); line = ''; } line += it.str; lastY = y; }
+    out.push(line);
+    text += out.join('\n').replace(/\n{3,}/g, '\n\n') + '\n\n';
+  }
+  return { pages: pdf.numPages, text: text.trim().slice(0, MAX_TEXT) };
+}
+function checkPdf(f) {
+  if (!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') return 'PDF 파일만 올릴 수 있어요. 한글·PPT는 \'PDF로 저장\', 사진은 \'PDF로 인쇄\'해서 올려 주세요.';
+  if (f.size > MAX_FILE_MB * 1048576) return `파일이 너무 커요(${MAX_FILE_MB}MB까지).`;
+  return '';
+}
+async function uploadPdf(file, act, no) {
+  const buf = await file.arrayBuffer();
+  let info = { pages: 0, text: '' };
+  try { info = await pdfInfo(buf); } catch { throw new Error('PDF를 열 수 없어요. 파일이 깨졌거나 암호가 걸려 있는지 확인해 주세요.'); }
+  const r = await callScript({ action: 'upload', activityId: act.id, activityTitle: act.title, no, name: file.name, data: b64(buf) });
+  return { name: file.name, id: r.id, url: r.url, pages: info.pages, text: info.text, at: Date.now() };
+}
+const fileCache = {};
+async function fetchPdfBytes(id) {
+  if (fileCache[id]) return fileCache[id];
+  const r = await callScript({ action: 'get', id });
+  return (fileCache[id] = unb64(r.data));
+}
+
+/* ───────── 시작 ───────── */
+const params = new URLSearchParams(location.search);
+let booted = false;
+onAuthStateChanged(auth, async user => {
+  if (booted && user) return;
+  try {
+    if (!user) {
+      if (params.get('t') === '1' || (!params.get('a') && loadLS('sm_teacher', false))) { booted = false; return teacherLogin(); }
+      await signInAnonymously(auth); return;
+    }
+    booted = true;
+    IS_T = user.email === TEACHER_EMAIL;
+    if (IS_T) { saveLS('sm_teacher', true); return teacherStart(); }
+    return studentStart(user);
+  } catch (e) { fatal(e); }
+});
+function fatal(e) {
+  console.error(e);
+  app.innerHTML = `<div class="center"><div class="errbox"><h3 style="margin-top:0">문제가 생겼어요</h3><p>${esc(e.message || e)}</p><p class="muted">새로고침해 보고, 계속되면 선생님께 알려 주세요.</p><button class="btn dark" onclick="location.reload()">새로고침</button></div></div>`;
+}
+
+/* ═════════ 교사 ═════════ */
+function teacherLogin() {
+  app.innerHTML = `<div class="center"><div class="mbox" style="width:min(420px,96vw)">
+    <h3>선생님 로그인</h3><p class="hint">우리 반 게시판과 같은 교사 계정으로 들어와요.</p>
+    <label class="f" for="te">이메일</label><input id="te" type="text" value="${esc(TEACHER_EMAIL)}" autocomplete="username">
+    <label class="f" for="tp">비밀번호</label><input id="tp" type="password" autocomplete="current-password">
+    <div class="mbtns"><button class="btn ghost" id="tback">학생 화면으로</button><button class="btn dark" id="tgo">들어가기</button></div>
+    <div id="terr" class="prog"></div></div></div>`;
+  const go = async () => {
+    $('#terr').textContent = '';
+    try { await signInWithEmailAndPassword(auth, $('#te').value.trim(), $('#tp').value); booted = false; }
+    catch (e) { $('#terr').textContent = '이메일이나 비밀번호가 맞지 않아요.'; }
+  };
+  $('#tgo').onclick = go; $('#tp').onkeydown = e => { if (e.key === 'Enter') go(); };
+  $('#tback').onclick = async () => { saveLS('sm_teacher', false); history.replaceState(null, '', location.pathname); await signInAnonymously(auth); };
+}
+
+const UI = { tab: '진로', subj: null, actId: null, sel: null, grp: null, stu: null };
+let CUR_SUBS = {};
+async function teacherStart() {
+  app.innerHTML = `<div class="center"><div class="loading">자료함 여는 중…</div></div>`;
+  if (!(await loadCfg())) { CFG = { year: new Date().getFullYear(), scriptUrl: '', groups: [] }; await saveCfg(); UI.tab = '명단'; }
+  await Promise.all([loadActs(), loadRoster()]);
+  if (!CFG.groups.length) UI.tab = '명단';
+  renderT();
+}
+function shell(inner, color) {
+  const n = a => ACTS.filter(x => x.area === a).length;
+  const tabs = [...AREAS.map(a => [a, a, n(a)]), ['학생별', '학생별', ''], ['명단', '명단·설정', '']];
+  return `<div class="drawer">
+    <div class="top"><div class="plate">활동 자료함<small>${esc(CFG.year)}</small></div><div class="sp"></div>
+      <div class="who">선생님 화면<button id="tout">로그아웃</button></div></div>
+    <nav class="tabs" role="tablist">${tabs.map(([id, label, c]) => `<button class="tab ${UI.tab === id ? 'on' : ''}" role="tab" aria-selected="${UI.tab === id}" data-tab="${id}" style="--c:var(--t-${id})">${label}${c !== '' ? `<span class="n">${c}</span>` : ''}</button>`).join('')}</nav>
+    <div class="sheet" style="--c:${color}">${inner}</div></div>`;
+}
+function bindShell() {
+  document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { if (UI.tab !== b.dataset.tab) UI.subj = null; UI.tab = b.dataset.tab; UI.actId = null; UI.sel = null; renderT(); });
+  $('#tout').onclick = async () => { saveLS('sm_teacher', false); await signOut(auth); location.href = location.pathname; };
+}
+async function renderT() {
+  if (AREAS.includes(UI.tab)) return renderArea();
+  if (UI.tab === '학생별') return renderStudents();
+  return renderSettings();
+}
+
+/* ── 영역 탭 ── */
+async function renderArea() {
+  const area = UI.tab;
+  let list = ACTS.filter(a => a.area === area);
+  const subjects = area === '교과' ? [...new Set([...CFG.groups.filter(g => g.kind === '교과').map(g => g.subject || g.name), ...list.map(a => a.subject)].filter(Boolean))] : [];
+  if (area === '교과' && UI.subj) list = list.filter(a => a.subject === UI.subj);
+  if (UI.actId && !list.some(a => a.id === UI.actId)) UI.actId = null;
+  if (!UI.actId && list[0]) UI.actId = list[0].id;
+  const act = ACTS.find(a => a.id === UI.actId);
+  if (act) CUR_SUBS = await subsOfAct(act.id);
+  const side = `<div class="side"><h3>${area} 활동</h3>
+    ${subjects.length ? `<div class="subj"><button class="chip ${!UI.subj ? 'on' : ''}" data-subj="">전체</button>${subjects.map(s => `<button class="chip ${UI.subj === s ? 'on' : ''}" data-subj="${esc(s)}">${esc(s)}</button>`).join('')}</div>` : ''}
+    <div class="alist">${list.map(a => {
+      const tot = studentsOfAct(a).length;
+      return `<button class="aitem ${a.id === UI.actId ? 'on' : ''}" data-act="${a.id}" style="--c:${areaColor(a.area)}"><b>${esc(a.title)}</b><span>${esc(a.groupIds.map(id => groupById(id)?.name || '').filter(Boolean).join(', '))}${a.due ? ` · ${isPast(a.due) ? '마감 지남' : '마감 ' + a.due.slice(5).replace('-', '/')}` : ''}${a.area === '교과' && !UI.subj ? ` · ${esc(a.subject || '')}` : ''}</span></button>`;
+    }).join('')}
+    <button class="newbtn" id="newAct">+ 새 활동 만들기</button></div></div>`;
+  let mid, right = '';
+  if (!act) {
+    mid = `<div class="mid"><div class="empty">${CFG.groups.length ? `아직 ${area} 활동이 없어요.<br>왼쪽 <b>+ 새 활동 만들기</b>로 시작하세요.` : `먼저 <b>명단·설정</b> 탭에서 반·동아리 명단을 넣어 주세요.`}</div></div>`;
+  } else {
+    const nos = studentsOfAct(act);
+    const subs = CUR_SUBS;
+    const nStu = nos.filter(n => subs[n] && subs[n].by !== 'teacher').length, nT = nos.filter(n => subs[n]?.by === 'teacher').length, nNone = nos.length - nStu - nT;
+    const pct = nos.length ? Math.round((nStu + nT) / nos.length * 100) : 0;
+    mid = `<div class="mid">
+      <div class="head"><div><h2>${esc(act.title)}</h2>
+        <div class="meta">${esc(act.groupIds.map(id => groupById(id)?.name).filter(Boolean).join(', '))} · ${act.questions.length ? `질문 ${act.questions.length}개` : '질문 없음'}${act.needFile ? ' + PDF' : ''}${act.due ? ` · 마감 ${fmtDue(act.due)}` : ''}</div></div>
+        <div class="sp"></div>
+        <button class="btn" id="qrBtn">QR 띄우기</button><button class="btn" id="inBtn">자료 들이기</button>
+        <button class="btn" id="xlBtn">엑셀</button><button class="btn dark" id="pdfBtn">종합 PDF</button>
+        <button class="btn ghost sm" id="editAct">고치기</button></div>
+      <div class="count">
+        <span class="k"><span class="dot" style="border:2px solid var(--stamp)"></span>학생 제출 ${nStu}</span>
+        <span class="k"><span class="dot" style="border:2px solid var(--stamp-blue)"></span>선생님이 올림 ${nT}</span>
+        <span class="k"><span class="dot" style="border:1.5px dashed #8a7543"></span>안 냄 ${nNone}</span>
+        <div class="bar"><i style="width:${pct}%"></i></div><b>${nStu + nT}/${nos.length}</b></div>
+      ${nos.length ? `<div class="grid">${nos.map(n => {
+        const s = subs[n];
+        const src = !s ? '안 냄' : s.by === 'teacher' ? (s.via || '올림') : [s.answers?.some(x => x) ? '글' : '', s.files?.length ? 'PDF' : ''].filter(Boolean).join('+') || '제출';
+        return `<button class="card ${!s ? 'none' : ''} ${UI.sel === n ? 'sel' : ''}" data-no="${n}" aria-label="${n} ${src}"><span class="no">${n}</span><div class="src">${esc(src)}</div>${s ? (s.by === 'teacher' ? '<div class="stamp blue">대리<br>접수</div>' : '<div class="stamp">접수</div>') : ''}</button>`;
+      }).join('')}</div>` : `<div class="empty">대상 학생이 없어요. 활동의 대상 반을 확인해 주세요.</div>`}
+      <p class="hint" style="margin-top:14px">학생 주소: <span style="font-family:var(--mono)">${esc(actLink(act))}</span></p>
+    </div>`;
+    right = `<aside class="right" aria-live="polite"><div class="clip"></div>${subDetailHTML(act, UI.sel, subs[UI.sel])}</aside>`;
+  }
+  app.innerHTML = shell(`<div class="three">${side}${mid}${right}</div>`, areaColor(area));
+  bindShell();
+  document.querySelectorAll('[data-subj]').forEach(b => b.onclick = () => { UI.subj = b.dataset.subj || null; UI.actId = null; renderT(); });
+  document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => { UI.actId = b.dataset.act; UI.sel = null; renderT(); });
+  $('#newAct').onclick = () => editActivity(null, area);
+  if (!act) return;
+  document.querySelectorAll('.card[data-no]').forEach(b => b.onclick = () => { UI.sel = b.dataset.no; renderArea(); });
+  $('#qrBtn').onclick = () => showQR(act);
+  $('#inBtn').onclick = () => intake(act);
+  $('#xlBtn').onclick = () => exportExcel(studentsOfAct(act), [act]);
+  $('#pdfBtn').onclick = () => pdfDialog(studentsOfAct(act), [act], act.title);
+  $('#editAct').onclick = () => editActivity(act, area);
+  bindDetail(act);
+}
+function subDetailHTML(act, no, s) {
+  if (!no) return `<h3>학생을 눌러 보세요</h3><p class="hint">카드를 누르면 낸 내용이 여기에 펼쳐져요. 빨간 '접수'는 학생이 직접 낸 것, 파란 '대리 접수'는 선생님이 올린 것이에요.</p>`;
+  const nm = ROSTER[no]?.name || '';
+  if (!s) return `<div class="who2"><span class="no">${no}</span><span class="meta">${esc(nm)} · 아직 안 냄</span></div>
+    <p class="hint">메일·구글폼·카톡으로 받았다면 '자료 들이기'에서 올려 주세요.</p><button class="btn" data-addfor="${no}">이 학생 자료 올리기</button>`;
+  return `<div class="who2"><span class="no">${no}</span><span class="meta">${esc(nm)} · ${s.by === 'teacher' ? `선생님이 올림${s.via ? ' (' + esc(s.via) + ')' : ''}` : '학생 제출'} · ${fmtAt(s.at)}</span></div>
+    ${act.questions.map((q, i) => `<div class="q"><div class="qq">${i + 1}. ${esc(q)}</div><div class="aa">${esc(s.answers?.[i] || '—')}</div></div>`).join('')}
+    ${(s.extra || []).map(x => `<div class="q"><div class="qq">${esc(x.q)}</div><div class="aa">${esc(x.a || '—')}</div></div>`).join('')}
+    ${s.files?.length ? `<div class="q"><div class="qq">첨부</div>${s.files.map(f => `<div class="file"><span class="ft">PDF</span>${f.url ? `<a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.name)}</a>` : esc(f.name)}<small>${f.pages ? f.pages + '쪽' : ''}${f.text ? '' : ' · 글 없음'}</small></div>`).join('')}
+      ${s.files.some(f => !f.text) ? '<p class="hint">\'글 없음\'은 스캔·사진 PDF예요. 종합 PDF에는 그대로 붙고, Claude는 그림으로 읽어요.</p>' : ''}</div>` : ''}
+    <div class="row" style="margin-top:12px"><button class="btn sm" data-addfor="${no}">파일 더 올리기</button><button class="btn sm danger" id="delSub">이 제출 지우기</button></div>`;
+}
+function bindDetail(act) {
+  document.querySelectorAll('[data-addfor]').forEach(b => b.onclick = () => intake(act, b.dataset.addfor));
+  const d = $('#delSub'); if (d) d.onclick = async () => {
+    if (!confirm(`${UI.sel} 학생의 이 활동 제출을 지울까요? (드라이브의 파일은 휴지통으로 가요)`)) return;
+    const s = CUR_SUBS[UI.sel];
+    for (const f of s.files || []) { try { await callScript({ action: 'trash', id: f.id }); } catch {} }
+    await deleteDoc(doc(db, 'sm_subs', subId(act.id, UI.sel))); toast('지웠어요'); renderArea();
+  };
+}
+const actLink = a => `${location.origin}${location.pathname}?a=${a.id}`;
+function showQR(act) {
+  const m = modal(`<div class="qrbig"><h3 style="margin:0">${esc(act.title)}</h3><div id="qr" style="background:#fff;padding:14px;border-radius:8px"></div>
+    <div class="url">${esc(actLink(act))}</div><p class="hint" style="margin:0;text-align:center">학생은 QR을 찍고 학번과 접속 코드로 들어와요.</p>
+    <div class="row"><button class="btn" id="cp">주소 복사</button><button class="btn dark" id="cl">닫기</button></div></div>`, { wide: true });
+  try { new QRCode(m.querySelector('#qr'), { text: actLink(act), width: 340, height: 340 }); } catch { m.querySelector('#qr').textContent = 'QR을 만들지 못했어요. 주소를 띄워 주세요.'; }
+  m.querySelector('#cp').onclick = async () => { try { await navigator.clipboard.writeText(actLink(act)); toast('주소를 복사했어요'); } catch { toast('복사하지 못했어요'); } };
+  m.querySelector('#cl').onclick = () => m.remove();
+}
+
+/* ── 활동 만들기·고치기 ── */
+function editActivity(act, area) {
+  const a = act ? structuredClone(act) : { id: rid(), year: CFG.year, area, subject: area === '교과' ? (UI.subj || '') : '', title: '', groupIds: [], questions: [], needFile: area === '동아리' || area === '교과', due: '', createdAt: Date.now() };
+  const kindFor = { '자율': ['담임'], '진로': ['담임'], '동아리': ['동아리'], '교과': ['교과'] }[area];
+  const gs = CFG.groups.slice().sort((x, y) => (kindFor.includes(y.kind) - kindFor.includes(x.kind)));
+  const m = modal(`<h3>${act ? '활동 고치기' : `새 ${area} 활동`}</h3>
+    <label class="f" for="aT">활동 이름</label><input id="aT" type="text" value="${esc(a.title)}" placeholder="예: 진로 탐구 보고서 1차">
+    ${area === '교과' ? `<label class="f" for="aS">과목</label><input id="aS" type="text" value="${esc(a.subject)}" placeholder="예: 확률과 통계" list="subjList"><datalist id="subjList">${[...new Set(CFG.groups.filter(g => g.kind === '교과').map(g => g.subject || g.name))].map(s => `<option value="${esc(s)}">`).join('')}</datalist>` : ''}
+    <label class="f">대상 반·동아리</label>
+    ${gs.length ? `<div class="checks">${gs.map(g => `<label><input type="checkbox" value="${g.id}" ${a.groupIds.includes(g.id) ? 'checked' : ''}> ${esc(g.name)} <span class="muted">${g.nos.length}명</span></label>`).join('')}</div>` : '<p class="warnline">명단·설정 탭에서 먼저 명단을 넣어 주세요.</p>'}
+    <label class="f" for="aD">마감(비우면 마감 없음)</label><input id="aD" type="date" value="${esc(a.due)}">
+    <label class="f" for="aQ">질문 (한 줄에 하나)</label>
+    <textarea id="aQ" rows="6" placeholder="관심 있는 분야와 그 이유&#10;탐구한 내용&#10;새로 알게 된 점">${esc(a.questions.join('\n'))}</textarea>
+    <div class="row" style="margin-top:6px"><button class="btn sm" id="aImp">질문지 올리기 (엑셀·PDF)</button><span class="hint">올리면 질문 후보가 위 칸에 들어가요. 확인하고 고쳐 주세요.</span></div>
+    <label class="f"><input type="checkbox" id="aF" ${a.needFile ? 'checked' : ''}> PDF 파일도 받기 (보고서·발표 자료)</label>
+    ${act && Object.keys(CUR_SUBS).length ? '<p class="warnline">이미 낸 학생이 있어요. 질문 순서를 바꾸면 기존 답과 질문이 어긋나니, 끝에 더하는 것만 권해요.</p>' : ''}
+    <div class="mbtns">${act ? '<button class="btn danger" id="aDel">활동 지우기</button><div class="sp"></div>' : ''}<button class="btn ghost" id="aX">취소</button><button class="btn dark" id="aOk">저장</button></div>`, { wide: true });
+  m.querySelector('#aX').onclick = () => m.remove();
+  m.querySelector('#aImp').onclick = async () => {
+    const f = await pickFile('.xlsx,.xls,.csv,.pdf,.txt'); if (!f) return;
+    try { const qs = await questionsFromFile(f); if (!qs.length) return toast('질문을 찾지 못했어요. 직접 입력해 주세요.'); m.querySelector('#aQ').value = qs.join('\n'); toast(`질문 ${qs.length}개를 찾았어요. 확인해 주세요.`); }
+    catch (e) { toast(e.message); }
+  };
+  if (act) m.querySelector('#aDel').onclick = async () => {
+    const n = Object.keys(CUR_SUBS).length;
+    if (!confirm(n ? `낸 자료 ${n}건이 있어요. 활동과 제출 기록을 모두 지울까요? (드라이브 파일은 남아요)` : '이 활동을 지울까요?')) return;
+    for (const no of Object.keys(CUR_SUBS)) await deleteDoc(doc(db, 'sm_subs', subId(act.id, no)));
+    await deleteDoc(doc(db, 'sm_activities', act.id));
+    ACTS = ACTS.filter(x => x.id !== act.id); UI.actId = null; m.remove(); toast('지웠어요'); renderT();
+  };
+  m.querySelector('#aOk').onclick = async () => {
+    a.title = m.querySelector('#aT').value.trim();
+    if (area === '교과') a.subject = m.querySelector('#aS').value.trim();
+    a.groupIds = [...m.querySelectorAll('.checks input:checked')].map(i => i.value);
+    a.due = m.querySelector('#aD').value;
+    a.questions = m.querySelector('#aQ').value.split('\n').map(s => s.trim()).filter(Boolean);
+    a.needFile = m.querySelector('#aF').checked;
+    if (!a.title) return toast('활동 이름을 써 주세요');
+    if (area === '교과' && !a.subject) return toast('과목을 써 주세요');
+    if (!a.groupIds.length) return toast('대상 반을 하나 이상 골라 주세요');
+    if (!a.questions.length && !a.needFile) return toast('질문을 쓰거나 PDF 받기를 켜 주세요');
+    await setDoc(doc(db, 'sm_activities', a.id), a);
+    const i = ACTS.findIndex(x => x.id === a.id); if (i >= 0) ACTS[i] = a; else ACTS.unshift(a);
+    UI.actId = a.id; if (area === '교과') UI.subj = a.subject; m.remove(); toast('저장했어요'); renderT();
+  };
+}
+async function questionsFromFile(f) {
+  if (/\.pdf$/i.test(f.name)) {
+    const { text } = await pdfInfo(await f.arrayBuffer());
+    if (!text) throw new Error('글이 없는 PDF(스캔본)예요. 질문을 직접 입력해 주세요.');
+    const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
+    const qs = lines.filter(l => /^(\d+[.)]|[①-⑳]|Q\d*[.:]?|문항\s*\d+)/.test(l) || /[?？]$/.test(l));
+    return (qs.length ? qs : lines).map(l => l.replace(/^(\d+[.)]|[①-⑳]|Q\d*[.:]?|문항\s*\d+[.:]?)\s*/, '').trim()).filter(l => l.length > 1).slice(0, 40);
+  }
+  if (/\.txt$/i.test(f.name)) return (await f.text()).split('\n').map(s => s.trim()).filter(Boolean);
+  const wb = XLSX.read(await f.arrayBuffer(), { type: 'array' });
+  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '' }).map(r => r.map(c => String(c).trim()));
+  const nonEmpty = rows.filter(r => r.some(Boolean));
+  if (!nonEmpty.length) return [];
+  // 한 열에 세로로 적힌 질문지, 또는 첫 줄에 가로로 적힌 질문지(구글폼 머리글)
+  const colCount = Math.max(...nonEmpty.map(r => r.filter(Boolean).length));
+  if (colCount === 1 || nonEmpty.length > 2) return nonEmpty.map(r => r.filter(Boolean).join(' ')).map(l => l.replace(/^(\d+[.)]|[①-⑳])\s*/, '')).slice(0, 40);
+  return nonEmpty[0].filter(Boolean).filter(h => !/타임스탬프|이메일|학번|이름|성명|반|번호/.test(h));
+}
+
+/* ── 자료 들이기 ── */
+function intake(act, forNo) {
+  const nos = studentsOfAct(act);
+  const m = modal(`<h3>자료 들이기 · ${esc(act.title)}</h3>
+    <p class="hint">메일·카톡·구글폼으로 받은 자료를 학번 칸에 넣어요. 넣은 자료는 파란 '대리 접수'로 표시돼요.</p>
+    <div class="row" role="tablist" style="margin:10px 0"><button class="chip on" data-in="pdf">PDF 넣기</button><button class="chip" data-in="form">구글폼 응답 엑셀</button><button class="chip" data-in="text">답 직접 입력</button></div>
+    <div id="inBody"></div><div id="inProg" class="prog"></div>
+    <div class="mbtns"><button class="btn dark" id="inClose">닫기</button></div>`, { wide: true });
+  let changed = false;
+  m.querySelector('#inClose').onclick = () => { m.remove(); if (changed) renderArea(); };
+  const prog = t => m.querySelector('#inProg').textContent = t;
+  const viaSel = `<label class="f" for="inVia">받은 곳</label><select id="inVia"><option>메일</option><option>카톡</option><option>게시판</option><option>종이</option><option>기타</option></select>`;
+  const stuSel = `<select id="inNo"><option value="">학번 고르기</option>${nos.map(n => `<option ${n === forNo ? 'selected' : ''}>${n}</option>`).join('')}</select>`;
+  const show = k => {
+    m.querySelectorAll('[data-in]').forEach(b => b.classList.toggle('on', b.dataset.in === k));
+    const body = m.querySelector('#inBody');
+    if (k === 'pdf') {
+      body.innerHTML = `${viaSel}<label class="f">학번</label>${stuSel}
+        <div class="drop" id="inDrop" style="margin-top:10px">PDF를 끌어놓거나 눌러서 고르기<small>파일 이름이 '20305_보고서.pdf'처럼 학번으로 시작하면 학번을 고르지 않아도 여러 개를 한 번에 나눠 넣어요</small></div>`;
+      const run = async files => {
+        const plan = [];
+        for (const f of files) {
+          const err = checkPdf(f); if (err) { prog(`${f.name}: ${err}`); continue; }
+          const no = normNo((f.name.match(/^\D*(\d{5})/) || [])[1]) || m.querySelector('#inNo').value;
+          if (!no) { prog(`${f.name}: 학번을 알 수 없어요. 학번을 고르거나 파일 이름 앞에 학번을 붙여 주세요.`); continue; }
+          if (!nos.includes(no) && !confirm(`${no}는 이 활동 대상 명단에 없어요. 그래도 넣을까요?`)) continue;
+          plan.push([f, no]);
+        }
+        let done = 0;
+        for (const [f, no] of plan) {
+          prog(`올리는 중… ${done + 1}/${plan.length} (${no} ${f.name})`);
+          try {
+            const meta = await uploadPdf(f, act, no);
+            const ref = doc(db, 'sm_subs', subId(act.id, no));
+            const old = (await getDoc(ref)).data();
+            await setDoc(ref, { ...(old || { activityId: act.id, no, year: CFG.year, area: act.area, subject: act.subject || '', answers: [], files: [] }), by: old?.by === 'student' ? 'student' : 'teacher', via: old?.by === 'student' ? (old.via || '') : m.querySelector('#inVia').value, files: [...(old?.files || []), meta], at: Date.now() });
+            done++; changed = true;
+          } catch (e) { prog(`${no} ${f.name}: ${e.message}`); return; }
+        }
+        if (plan.length) prog(`${done}개 넣었어요.`);
+      };
+      const dz = m.querySelector('#inDrop'); bindDrop(dz, run); dz.onclick = async () => run(await pickFile('.pdf,application/pdf', true));
+    } else if (k === 'form') {
+      body.innerHTML = `<p class="hint">구글폼 응답 시트를 엑셀(.xlsx)로 내려받아 넣어 주세요. '학번' 열(또는 학년·반·번호 열)로 학생을 찾고, 나머지 열은 질문으로 넣어요. 파일 업로드 문항이 있으면 그 파일도 드라이브에서 가져와요.</p>
+        <div class="drop" id="inDrop">응답 엑셀 끌어놓기 / 고르기</div>`;
+      const dz = m.querySelector('#inDrop');
+      const go = async f => { if (!f) return; try { const n = await importForm(f, act, prog); if (n) { changed = true; } } catch (e) { prog(e.message); } };
+      bindDrop(dz, fs => go(fs[0])); dz.onclick = async () => go(await pickFile('.xlsx,.xls,.csv'));
+    } else {
+      body.innerHTML = `${viaSel}<label class="f">학번</label>${stuSel}
+        ${act.questions.map((q, i) => `<label class="f" for="inA${i}">${i + 1}. ${esc(q)}</label><textarea id="inA${i}" rows="3"></textarea>`).join('') || '<p class="hint">이 활동에는 질문이 없어요. PDF 넣기를 써 주세요.</p>'}
+        ${act.questions.length ? '<div class="mbtns"><button class="btn dark" id="inSave">이 학생 답 넣기</button></div>' : ''}`;
+      const load = async () => { const no = m.querySelector('#inNo').value; if (!no) return; const s = (await getDoc(doc(db, 'sm_subs', subId(act.id, no)))).data(); act.questions.forEach((_, i) => m.querySelector('#inA' + i).value = s?.answers?.[i] || ''); };
+      m.querySelector('#inNo').onchange = load; load();
+      const sv = m.querySelector('#inSave'); if (sv) sv.onclick = async () => {
+        const no = m.querySelector('#inNo').value; if (!no) return toast('학번을 골라 주세요');
+        const ref = doc(db, 'sm_subs', subId(act.id, no)); const old = (await getDoc(ref)).data();
+        await setDoc(ref, { ...(old || { activityId: act.id, no, year: CFG.year, area: act.area, subject: act.subject || '', files: [] }), answers: act.questions.map((_, i) => m.querySelector('#inA' + i).value.trim()), by: old?.by === 'student' ? 'student' : 'teacher', via: old?.by === 'student' ? (old.via || '') : m.querySelector('#inVia').value, at: Date.now() });
+        changed = true; prog(`${no} 답을 넣었어요.`);
+      };
+    }
+  };
+  m.querySelectorAll('[data-in]').forEach(b => b.onclick = () => show(b.dataset.in));
+  show('pdf');
+}
+async function importForm(f, act, prog) {
+  const wb = XLSX.read(await f.arrayBuffer(), { type: 'array' });
+  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '' }).map(r => r.map(c => String(c).trim()));
+  const head = rows[0] || [];
+  const hi = (re) => head.findIndex(h => re.test(h));
+  const cNo = hi(/학번/), cG = hi(/^학년/), cC = hi(/^반$|^반\s/), cN = hi(/^번호/);
+  if (cNo < 0 && !(cG >= 0 && cC >= 0 && cN >= 0)) throw new Error("'학번' 열(또는 학년·반·번호 열)을 찾지 못했어요.");
+  const skip = new Set([cNo, cG, cC, cN].filter(i => i >= 0));
+  head.forEach((h, i) => { if (/타임스탬프|timestamp|이메일|email|^이름|성명/i.test(h)) skip.add(i); });
+  const dataCols = head.map((h, i) => i).filter(i => !skip.has(i) && head[i]);
+  const isFileCol = i => rows.slice(1).some(r => /drive\.google\.com/.test(r[i] || ''));
+  const fileCols = dataCols.filter(isFileCol), qCols = dataCols.filter(i => !fileCols.includes(i));
+  const norm = s => s.replace(/\s+/g, '').replace(/^\d+[.)]/, '');
+  const map = qCols.map(i => act.questions.findIndex(q => norm(q) === norm(head[i]) || norm(head[i]).includes(norm(q)) || norm(q).includes(norm(head[i]))));
+  const nos = new Set(studentsOfAct(act));
+  let n = 0, skipped = [];
+  const list = rows.slice(1).filter(r => r.some(Boolean));
+  for (const r of list) {
+    const no = cNo >= 0 ? normNo(r[cNo]) : normNo(`${r[cG]}${String(r[cC]).padStart(2, '0')}${String(r[cN]).padStart(2, '0')}`);
+    if (!no) { skipped.push(r[cNo] || '?'); continue; }
+    prog(`가져오는 중… ${n + 1}/${list.length} (${no})`);
+    const ref = doc(db, 'sm_subs', subId(act.id, no)); const old = (await getDoc(ref)).data();
+    const answers = act.questions.map((_, qi) => old?.answers?.[qi] || '');
+    const extra = [];
+    qCols.forEach((c, k) => { if (map[k] >= 0) answers[map[k]] = r[c]; else if (r[c]) extra.push({ q: head[c], a: r[c] }); });
+    const files = [...(old?.files || [])];
+    for (const c of fileCols) for (const url of (r[c] || '').split(/[,\s]+/).filter(u => /drive\.google\.com/.test(u))) {
+      const id = (url.match(/[?&]id=([\w-]+)/) || url.match(/\/d\/([\w-]+)/) || [])[1]; if (!id) continue;
+      const cp = await callScript({ action: 'copy', fileId: id, activityId: act.id, activityTitle: act.title, no });
+      if (cp.mime && cp.mime !== 'application/pdf') { extra.push({ q: head[c], a: `PDF가 아닌 파일(${cp.name})이라 종합 PDF에는 빠져요.` }); }
+      let info = { pages: 0, text: '' };
+      if (cp.mime === 'application/pdf') { try { info = await pdfInfo((await fetchPdfBytes(cp.id)).buffer); } catch {} }
+      files.push({ name: cp.name, id: cp.id, url: cp.url, pages: info.pages, text: info.text, at: Date.now(), pdf: cp.mime === 'application/pdf' });
+    }
+    await setDoc(ref, { ...(old || { activityId: act.id, no, year: CFG.year, area: act.area, subject: act.subject || '' }), answers, extra, files, by: old?.by === 'student' ? 'student' : 'teacher', via: old?.by === 'student' ? (old.via || '') : '구글폼', at: Date.now() });
+    n++;
+    if (!nos.has(no)) skipped.push(no + '(대상 명단에 없음, 그래도 넣음)');
+  }
+  const unmatched = qCols.filter((c, k) => map[k] < 0).map(c => head[c]);
+  prog(`${n}명을 넣었어요.${unmatched.length ? `\n활동 질문과 이름이 다른 열 ${unmatched.length}개는 '추가 답'으로 넣었어요: ${unmatched.join(', ')}` : ''}${skipped.length ? `\n확인 필요: ${skipped.join(', ')}` : ''}`);
+  return n;
+}
+
+/* ── 학생별 ── */
+async function renderStudents() {
+  const gs = CFG.groups;
+  if (!UI.grp && gs[0]) UI.grp = gs[0].id;
+  const g = groupById(UI.grp);
+  const nos = g ? g.nos : [];
+  if (UI.stu && !nos.includes(UI.stu) && !ROSTER[UI.stu]) UI.stu = null;
+  let colsHtml = '';
+  if (UI.stu) {
+    const subs = await subsOfStudent(UI.stu);
+    const acts = actsOfStudent(UI.stu);
+    const buckets = {};
+    acts.forEach(a => { const k = actLabel(a); (buckets[k] = buckets[k] || { area: a.area, list: [] }).list.push(a); });
+    const keys = Object.keys(buckets).sort((x, y) => AREAS.indexOf(buckets[x].area) - AREAS.indexOf(buckets[y].area));
+    colsHtml = keys.length ? `<div class="cols">${keys.map(k => {
+      const b = buckets[k]; const got = b.list.filter(a => subs[a.id]).length;
+      return `<div class="col" style="--c:${areaColor(b.area)}"><h4>${esc(k)}<span>${got}/${b.list.length}건</span></h4>${b.list.map(a => {
+        const s = subs[a.id];
+        if (!s) return `<div class="it miss"><b>${esc(a.title)}</b><span>안 냄${a.due ? ' · 마감 ' + a.due.slice(5).replace('-', '/') : ''}</span></div>`;
+        return `<div class="it"><b>${esc(a.title)}</b><span>${s.by === 'teacher' ? `선생님이 올림${s.via ? ' · ' + esc(s.via) : ''}` : '학생 제출'} · ${fmtAt(s.at)}${s.files?.length ? ` · PDF ${s.files.reduce((t, f) => t + (f.pages || 0), 0)}쪽` : ''}</span>
+          <details><summary>내용 보기</summary>${a.questions.map((q, i) => `<div class="q"><div class="qq">${i + 1}. ${esc(q)}</div><div class="aa">${esc(s.answers?.[i] || '—')}</div></div>`).join('')}${(s.files || []).map(f => `<div class="file"><span class="ft">PDF</span><a href="${esc(f.url || '#')}" target="_blank" rel="noopener">${esc(f.name)}</a></div>`).join('')}</details></div>`;
+      }).join('')}</div>`;
+    }).join('')}</div>` : `<div class="empty">이 학생에게 내준 활동이 아직 없어요.</div>`;
+  }
+  const inner = `<div class="head"><div><h2>학생별 서류철</h2><div class="meta">담임반·수업반·동아리 학생 모두 · 학번을 누르면 그 학생에게 내준 활동만 영역별로 펼쳐져요</div></div></div>
+    ${gs.length ? `<div class="grp">${gs.map(x => `<button class="chip ${x.id === UI.grp ? 'on' : ''}" data-g="${x.id}">${esc(x.name)}</button>`).join('')}<span class="sp"></span>
+      <label class="muted">학번 찾기 <input type="search" id="findNo" inputmode="numeric" placeholder="20305" style="width:110px;font-family:var(--mono)"></label></div>
+      <div class="pick">${nos.map(n => `<button class="${n === UI.stu ? 'on' : ''}" data-s="${n}" title="${esc(ROSTER[n]?.name || '')}">${n}</button>`).join('')}</div>
+      ${UI.stu ? `<div class="who2"><span class="no" style="font-family:var(--mono);font-size:22px">${UI.stu}</span><span class="meta">${esc(ROSTER[UI.stu]?.name || '')} · ${esc(groupsOfStudent(UI.stu).map(x => x.name).join(', '))}</span></div>${colsHtml}` : '<div class="empty">위에서 학번을 눌러 주세요.</div>'}
+      <div class="pdfbox"><b style="font-family:var(--font-title);font-size:17px">내려받기</b>
+        <label><input type="radio" name="scope" value="one" ${UI.stu ? 'checked' : 'disabled'}> 이 학생만</label>
+        <label><input type="radio" name="scope" value="grp" ${UI.stu ? '' : 'checked'}> ${esc(g?.name || '')} 전체(학번마다 새 쪽)</label>
+        <span class="sp"></span><button class="btn" id="sXl">엑셀</button><button class="btn dark" id="sPdf">종합 PDF</button></div>`
+      : `<div class="empty">명단·설정 탭에서 명단을 먼저 넣어 주세요.</div>`}`;
+  app.innerHTML = shell(inner, 'var(--t-학생별)');
+  bindShell();
+  document.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { UI.grp = b.dataset.g; UI.stu = null; renderStudents(); });
+  document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { UI.stu = b.dataset.s; renderStudents(); });
+  const fnd = $('#findNo'); if (fnd) fnd.onkeydown = e => {
+    if (e.key !== 'Enter') return; const no = normNo(fnd.value); if (!no) return toast('학번 다섯 자리를 써 주세요');
+    const gg = groupsOfStudent(no); if (!gg.length) return toast('명단에 없는 학번이에요');
+    if (!gg.some(x => x.id === UI.grp)) UI.grp = gg[0].id; UI.stu = no; renderStudents();
+  };
+  const scope = () => document.querySelector('[name=scope]:checked')?.value === 'one' ? [UI.stu] : nos;
+  const sx = $('#sXl'); if (sx) sx.onclick = () => { const list = scope(); exportExcel(list, null); };
+  const sp = $('#sPdf'); if (sp) sp.onclick = () => { const list = scope(); pdfDialog(list, null, list.length === 1 ? list[0] : g.name); };
+}
+
+/* ── 내려받기: 엑셀 ── */
+async function gatherSubs(nos, acts) {
+  const out = {}; // no → {actId → sub}
+  if (acts) { for (const a of acts) { const m = await subsOfAct(a.id); for (const n of nos) { if (m[n]) (out[n] = out[n] || {})[a.id] = m[n]; } } }
+  else { for (const n of nos) out[n] = await subsOfStudent(n); }
+  return out;
+}
+async function exportExcel(nos, acts) {
+  toast('엑셀 만드는 중…');
+  const data = await gatherSubs(nos, acts);
+  const withName = confirm('엑셀에 학생 이름도 넣을까요?\n(Claude에 올릴 파일이면 [취소]를 눌러 학번만 넣으세요)');
+  const rows = [['학번', ...(withName ? ['이름'] : []), '영역', '과목', '활동', '항목', '내용', '낸 방법']];
+  for (const n of nos) {
+    const acs = acts || actsOfStudent(n);
+    for (const a of acs) {
+      const s = data[n]?.[a.id]; const base = [n, ...(withName ? [ROSTER[n]?.name || ''] : []), a.area, a.subject || '', a.title];
+      const how = !s ? '안 냄' : s.by === 'teacher' ? `선생님이 올림${s.via ? '(' + s.via + ')' : ''}` : '학생 제출';
+      if (!s) { rows.push([...base, '', '', how]); continue; }
+      a.questions.forEach((q, i) => rows.push([...base, q, s.answers?.[i] || '', how]));
+      (s.extra || []).forEach(x => rows.push([...base, x.q, x.a, how]));
+      (s.files || []).forEach(f => rows.push([...base, `파일: ${f.name}`, (f.text || '(글 없는 PDF)').slice(0, 32000), how]));
+    }
+  }
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = rows[0].map((h, i) => ({ wch: h === '내용' ? 80 : h === '활동' || h === '항목' ? 26 : 10 }));
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, '활동자료');
+  XLSX.writeFile(wb, `활동자료_${acts?.length === 1 ? acts[0].title : nos.length === 1 ? nos[0] : '모음'}_${today()}.xlsx`);
+}
+
+/* ── 내려받기: 종합 PDF ── */
+function pdfDialog(nos, acts, label) {
+  const m = modal(`<h3>종합 PDF</h3>
+    <p class="hint">${nos.length}명 · 학번마다 새 쪽에서 시작하고, 질문과 답 다음에 학생이 낸 PDF가 원래 모양 그대로 이어 붙어요.</p>
+    <label class="f"><input type="checkbox" id="pAnon" checked> 이름 빼고 학번만 (Claude에 올릴 때)</label>
+    <p class="hint">학생이 낸 PDF 안에 적힌 이름까지 지울 수는 없어요.</p>
+    <label class="f"><input type="checkbox" id="pEmpty"> 안 낸 활동도 '안 냄'으로 적기</label>
+    <div id="pProg" class="prog"></div>
+    <div class="mbtns"><button class="btn ghost" id="pX">닫기</button><button class="btn dark" id="pGo">만들기</button></div>`);
+  m.querySelector('#pX').onclick = () => m.remove();
+  m.querySelector('#pGo').onclick = async () => {
+    const btn = m.querySelector('#pGo'); btn.disabled = true;
+    const prog = t => m.querySelector('#pProg').textContent = t;
+    try {
+      const bytes = await buildPdf(nos, acts, { anon: m.querySelector('#pAnon').checked, empty: m.querySelector('#pEmpty').checked }, prog);
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+      const a = document.createElement('a'); a.href = url; a.download = `종합_${label}_${today()}.pdf`; a.click();
+      prog('다 만들었어요. 내려받기 폴더를 확인해 주세요.');
+    } catch (e) { console.error(e); prog('만들지 못했어요: ' + e.message); }
+    btn.disabled = false;
+  };
+}
+let FONTS = null;
+async function loadFonts() {
+  if (FONTS) return FONTS;
+  const [r, b] = await Promise.all([fetch(FONT_URLS.r).then(x => x.arrayBuffer()), fetch(FONT_URLS.b).then(x => x.arrayBuffer())]);
+  return (FONTS = { r, b });
+}
+async function buildPdf(nos, acts, opt, prog) {
+  const { PDFDocument, rgb } = PDFLib;
+  prog('글꼴 준비 중…');
+  const F = await loadFonts();
+  const out = await PDFDocument.create(); out.registerFontkit(fontkit);
+  const fr = await out.embedFont(F.r, { subset: true }), fbd = await out.embedFont(F.b, { subset: true });
+  prog('자료 모으는 중…');
+  const data = await gatherSubs(nos, acts);
+  const W = 595.28, H = 841.89, M = 48, LW = W - M * 2;
+  let page, y;
+  const newPage = () => { page = out.addPage([W, H]); y = H - M; };
+  const wrap = (text, font, size) => {
+    const lines = [];
+    for (const para of String(text).split('\n')) {
+      let cur = '';
+      for (const ch of para) { const t = cur + ch; if (font.widthOfTextAtSize(t, size) > LW && cur) { lines.push(cur); cur = ch.trim() ? ch : ''; } else cur = t; }
+      lines.push(cur);
+    }
+    return lines;
+  };
+  const write = (text, { font = fr, size = 10.5, color = rgb(.14, .15, .17), gap = 4, indent = 0 } = {}) => {
+    for (const l of wrap(text, font, size)) {
+      if (y - size < M) newPage();
+      page.drawText(l, { x: M + indent, y: y - size, size, font, color }); y -= size * 1.55;
+    }
+    y -= gap;
+  };
+  const rule = () => { if (y < M + 20) newPage(); page.drawLine({ start: { x: M, y }, end: { x: W - M, y }, thickness: .6, color: rgb(.75, .7, .55) }); y -= 10; };
+  let i = 0;
+  for (const n of nos) {
+    i++; prog(`만드는 중… ${i}/${nos.length} (${n})`);
+    const acs = (acts || actsOfStudent(n)).slice().sort((a, b) => AREAS.indexOf(a.area) - AREAS.indexOf(b.area));
+    const subs = data[n] || {};
+    if (!acs.some(a => subs[a.id]) && !opt.empty) continue;
+    newPage();
+    write(`${n}${opt.anon ? '' : ' ' + (ROSTER[n]?.name || '')}`, { font: fbd, size: 20, gap: 2 });
+    write(`${CFG.year}학년도 활동 자료 · ${acs.filter(a => subs[a.id]).length}/${acs.length}건 제출`, { size: 10, color: rgb(.4, .4, .42), gap: 8 });
+    rule();
+    const attach = [];
+    for (const a of acs) {
+      const s = subs[a.id];
+      if (!s && !opt.empty) continue;
+      write(`[${actLabel(a)}] ${a.title}`, { font: fbd, size: 13, gap: 2 });
+      if (!s) { write('안 냄', { color: rgb(.55, .5, .35), gap: 10 }); continue; }
+      write(`${s.by === 'teacher' ? '선생님이 올림' + (s.via ? '(' + s.via + ')' : '') : '학생 제출'} · ${fmtAt(s.at)}`, { size: 9, color: rgb(.4, .4, .42), gap: 6 });
+      a.questions.forEach((q, k) => { write(`${k + 1}. ${q}`, { font: fbd, size: 10.5, gap: 1 }); write(s.answers?.[k] || '—', { gap: 6, indent: 8 }); });
+      (s.extra || []).forEach(x => { write(x.q, { font: fbd, size: 10.5, gap: 1 }); write(x.a || '—', { gap: 6, indent: 8 }); });
+      (s.files || []).forEach(f => { write(`첨부: ${f.name}${f.pages ? ` (${f.pages}쪽, 뒤에 붙음)` : ''}`, { size: 9.5, color: rgb(.35, .35, .38), gap: 4 }); if (f.pdf !== false) attach.push([a, f]); });
+      y -= 6;
+    }
+    for (const [a, f] of attach) {
+      prog(`만드는 중… ${i}/${nos.length} (${n} · ${f.name})`);
+      try {
+        const src = await PDFDocument.load(await fetchPdfBytes(f.id), { ignoreEncryption: true });
+        const pages = await out.copyPages(src, src.getPageIndices());
+        pages.forEach((p, k) => { out.addPage(p); if (k === 0) { const { width, height } = p.getSize(); p.drawText(`${n} · ${a.title} · ${f.name}`.slice(0, 80), { x: 12, y: height - 14, size: 8, font: fr, color: rgb(.5, .5, .5) }); } });
+      } catch (e) { newPage(); write(`${n} · ${f.name}: 파일을 붙이지 못했어요 (${e.message}). 드라이브에서 직접 확인해 주세요.`); }
+    }
+  }
+  if (!out.getPageCount()) throw new Error('넣을 자료가 없어요.');
+  prog('저장 중…');
+  return out.save();
+}
+
+/* ── 명단·설정 ── */
+function renderSettings() {
+  const gs = CFG.groups;
+  const inner = `<div class="head"><div><h2>명단·설정</h2><div class="meta">${CFG.year}학년도 · 학생 ${Object.keys(ROSTER).length}명 · 명단 ${gs.length}개</div></div></div>
+    <div class="panel"><h3>① 명단 넣기</h3>
+      <p class="hint">나이스에서 받은 학생 명단 엑셀(학년·반·번호·성명 칸)을 놓으면 명단이 하나씩 생겨요. 담임반·수업반·동아리 명단을 모두 넣어 주세요. 학생마다 6자리 <b>접속 코드</b>가 자동으로 만들어져요.</p>
+      <div class="drop" id="rDrop">나이스 명단 엑셀(.xlsx) 끌어놓기 / 고르기 · 여러 개 가능</div>
+      <details style="margin-top:10px"><summary class="hint">엑셀이 없으면: 학번·이름 붙여넣기</summary>
+        <div class="row" style="margin-top:8px;align-items:flex-start"><textarea id="rPaste" rows="5" placeholder="20301	홍길동&#10;20302	김하나" style="max-width:360px"></textarea>
+        <div><input type="text" id="rName" placeholder="명단 이름 (예: 2-3 담임반)" style="margin-bottom:6px"><br><select id="rKind">${KINDS.map(k => `<option>${k}</option>`).join('')}</select> <button class="btn" id="rPasteGo">명단 만들기</button></div></div></details>
+    </div>
+    <div class="panel"><h3>② 명단 목록</h3>
+      ${gs.length ? `<table class="gtable"><thead><tr><th>이름</th><th>종류</th><th>과목</th><th>학생</th><th></th></tr></thead><tbody>
+        ${gs.map(g => `<tr><td><input type="text" value="${esc(g.name)}" data-gname="${g.id}" style="width:100%"></td>
+          <td><select data-gkind="${g.id}">${KINDS.map(k => `<option ${g.kind === k ? 'selected' : ''}>${k}</option>`).join('')}</select></td>
+          <td>${g.kind === '교과' ? `<input type="text" value="${esc(g.subject || '')}" data-gsubj="${g.id}" placeholder="과목">` : ''}</td>
+          <td class="mono">${g.nos.length}명</td>
+          <td><button class="btn sm" data-gslip="${g.id}">코드표 인쇄</button> <button class="btn sm danger" data-gdel="${g.id}">빼기</button></td></tr>`).join('')}
+      </tbody></table>` : '<p class="hint">아직 명단이 없어요.</p>'}
+    </div>
+    <div class="panel"><h3>③ 드라이브 연결 (PDF 저장)</h3>
+      <p class="hint">학생이 낸 PDF는 선생님 구글 드라이브 '활동자료함' 폴더에 쌓여요. 안내서대로 Apps Script를 한 번 배포하고, 받은 웹 앱 주소를 붙여 넣어 주세요.</p>
+      <div class="row"><input type="url" id="sUrl" value="${esc(CFG.scriptUrl || '')}" placeholder="https://script.google.com/macros/s/…/exec" style="flex:1;min-width:260px">
+        <button class="btn" id="sTest">연결 확인</button><button class="btn dark" id="sSave">저장</button></div><div id="sMsg" class="prog"></div>
+    </div>
+    <div class="panel"><h3>④ 학년도</h3>
+      <div class="row"><input type="number" id="yr" value="${CFG.year}" style="width:110px"><button class="btn" id="yrSave">학년도 바꾸기</button>
+      <span class="hint">새 학년도로 바꾸면 활동·명단·코드를 새로 시작해요. 지난 학년도 자료는 지우지 않고 남아 있어요.</span></div>
+    </div>`;
+  app.innerHTML = shell(inner, 'var(--t-명단)');
+  bindShell();
+  const dz = $('#rDrop');
+  const go = async files => { for (const f of files) { try { await importRosterFile(f); } catch (e) { alert(`${f.name}: ${e.message}`); } } renderSettings(); };
+  bindDrop(dz, go); dz.onclick = async () => go(await pickFile('.xlsx,.xls', true));
+  $('#rPasteGo').onclick = async () => {
+    const list = $('#rPaste').value.split('\n').map(l => { const m = l.match(/(\d{5})\s+(.+)/); return m ? { no: m[1], name: m[2].trim() } : null; }).filter(Boolean);
+    if (!list.length) return toast('한 줄에 학번과 이름을 함께 써 주세요');
+    const name = $('#rName').value.trim(); if (!name) return toast('명단 이름을 써 주세요');
+    await addGroup(name, $('#rKind').value, '', list); renderSettings();
+  };
+  document.querySelectorAll('[data-gname]').forEach(i => i.onchange = async () => { groupById(i.dataset.gname).name = i.value.trim() || '이름 없음'; await saveCfg(); toast('저장했어요'); });
+  document.querySelectorAll('[data-gkind]').forEach(i => i.onchange = async () => { groupById(i.dataset.gkind).kind = i.value; await saveCfg(); renderSettings(); });
+  document.querySelectorAll('[data-gsubj]').forEach(i => i.onchange = async () => { groupById(i.dataset.gsubj).subject = i.value.trim(); await saveCfg(); toast('저장했어요'); });
+  document.querySelectorAll('[data-gdel]').forEach(b => b.onclick = async () => {
+    const g = groupById(b.dataset.gdel);
+    const used = ACTS.filter(a => a.groupIds.includes(g.id));
+    if (!confirm(`'${g.name}' 명단을 뺄까요?${used.length ? `\n이 명단을 쓰는 활동 ${used.length}개에서 대상이 빠져요. (낸 자료는 남아요)` : ''}`)) return;
+    CFG.groups = CFG.groups.filter(x => x.id !== g.id); await saveCfg(); renderSettings();
+  });
+  document.querySelectorAll('[data-gslip]').forEach(b => b.onclick = () => printSlips(groupById(b.dataset.gslip)));
+  $('#sSave').onclick = async () => { CFG.scriptUrl = $('#sUrl').value.trim(); await saveCfg(); toast('저장했어요'); };
+  $('#sTest').onclick = async () => {
+    CFG.scriptUrl = $('#sUrl').value.trim(); $('#sMsg').textContent = '확인 중…';
+    try { const r = await callScript({ action: 'ping' }); $('#sMsg').textContent = `연결됐어요. 드라이브 폴더: ${r.folderName || '활동자료함'}`; await saveCfg(); }
+    catch (e) { $('#sMsg').textContent = '연결 안 됨: ' + e.message; }
+  };
+  $('#yrSave').onclick = async () => {
+    const y = +$('#yr').value; if (!y || y === CFG.year) return;
+    if (!confirm(`${y}학년도로 바꿀까요? 지금 화면의 명단·활동은 ${CFG.year}학년도 것으로 남고, 새 학년도는 빈 상태로 시작해요.`)) return;
+    CFG.year = y; CFG.groups = []; await saveCfg(); await Promise.all([loadActs(), loadRoster()]); renderSettings();
+  };
+}
+async function importRosterFile(f) {
+  const wb = XLSX.read(await f.arrayBuffer(), { type: 'array' });
+  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '' }).map(r => r.map(c => String(c).trim()));
+  const nh = s => s.replace(/\s+/g, '');
+  let hi = rows.findIndex(r => { const t = r.map(nh); return (t.includes('반/번호') || (t.includes('반') && t.includes('번호'))) && (t.includes('성명') || t.includes('학년')); });
+  if (hi < 0) hi = rows.findIndex(r => r.map(nh).includes('학번'));
+  if (hi < 0) throw new Error('학년·반·번호·성명(또는 학번) 칸을 찾지 못했어요.');
+  const H = {}; rows[hi].forEach((h, i) => { const k = nh(h); if (k && !(k in H)) H[k] = i; });
+  let title = '', kind = '';
+  for (const r of rows.slice(0, hi)) {
+    const t = r.filter(Boolean); const i = t.findIndex(x => /^부서명/.test(x));
+    if (i >= 0) { title = (t[i].replace(/^부서명\s*:?\s*/, '') || t[i + 1] || '').trim(); kind = '동아리'; break; }
+    const c = t.find(x => /^교과\s*:/.test(x)); if (c) { title = c.replace(/^교과\s*:\s*/, '').trim(); kind = '교과'; break; }
+  }
+  const num = v => /^\d+(\.0+)?$/.test(v) ? String(parseInt(v, 10)) : null;
+  const list = [], seen = new Set(), classes = new Set();
+  for (const r of rows.slice(hi + 1)) {
+    let no = '';
+    if (H['학번'] !== undefined) no = normNo(r[H['학번']]);
+    else {
+      let g = num(r[H['학년']] ?? ''), c = '', n = '';
+      if (H['반/번호'] !== undefined) { const m = /(\d+)\s*\/\s*(\d+)/.exec(r[H['반/번호']]); if (m) { c = m[1]; n = m[2]; } } else { c = num(r[H['반']] ?? ''); n = num(r[H['번호']] ?? ''); }
+      if (g && c && n) no = `${g}${String(c).padStart(2, '0')}${String(n).padStart(2, '0')}`;
+    }
+    if (!no || seen.has(no)) continue; seen.add(no); classes.add(no.slice(0, 3));
+    list.push({ no, name: H['성명'] !== undefined ? r[H['성명']] : '' });
+  }
+  if (!list.length) throw new Error('학생을 찾지 못했어요.');
+  if (!kind) kind = classes.size === 1 ? '담임' : '교과';
+  const cls1 = classes.size === 1 ? `${[...classes][0][0]}-${+[...classes][0].slice(1)}` : '';
+  const guess = kind === '교과' && title && cls1 ? `${title} ${cls1}` : title || (classes.size === 1 ? `${[...classes][0][0]}-${+[...classes][0].slice(1)} ${kind === '담임' ? '담임반' : ''}`.trim() : f.name.replace(/\.xlsx?$/i, ''));
+  const name = prompt(`${f.name}\n학생 ${list.length}명을 찾았어요. 명단 이름을 정해 주세요.\n(종류: ${kind} — 목록에서 바꿀 수 있어요)`, guess);
+  if (name === null) return;
+  await addGroup(name.trim() || guess, kind, kind === '교과' ? title : '', list);
+}
+async function addGroup(name, kind, subject, list) {
+  const ex = CFG.groups.find(g => g.name === name);
+  const g = ex || { id: rid(), name, kind, subject, nos: [] };
+  g.nos = [...new Set([...g.nos, ...list.map(x => x.no)])].sort();
+  if (!ex) CFG.groups.push(g);
+  const newOnes = list.filter(x => !ROSTER[x.no] || (x.name && ROSTER[x.no].name !== x.name));
+  for (const x of newOnes) {
+    const v = { no: x.no, year: CFG.year, name: x.name || ROSTER[x.no]?.name || '', code: ROSTER[x.no]?.code || String(Math.floor(100000 + Math.random() * 900000)) };
+    await setDoc(doc(db, 'sm_roster', `${CFG.year}_${x.no}`), v); ROSTER[x.no] = v;
+  }
+  await saveCfg();
+  toast(`'${name}' ${list.length}명 ${ex ? '갱신' : '추가'}`);
+}
+function printSlips(g) {
+  const url = `${location.origin}${location.pathname}`;
+  $('#printArea').innerHTML = `<div class="slips">${g.nos.map(n => `<div class="slip"><b>${n}</b> ${esc(ROSTER[n]?.name || '')}<br>접속 코드 <span class="code">${esc(ROSTER[n]?.code || '')}</span><br><span style="font-size:10px">${esc(url)}</span></div>`).join('')}</div>`;
+  window.print();
+}
+
+/* ═════════ 학생 ═════════ */
+let SV = { actId: params.get('a') };
+async function studentStart(user) {
+  app.innerHTML = `<div class="phone"><div class="center"><div class="loading" style="color:var(--ink-2)">불러오는 중…</div></div></div>`;
+  if (!(await loadCfg())) return fatal(new Error('아직 준비 중인 자료함이에요. 선생님께 알려 주세요.'));
+  const c = await getDoc(doc(db, 'sm_claims', user.uid)).catch(() => null);
+  const cl = c?.exists() ? c.data() : null;
+  if (cl && cl.year === CFG.year) { ME = { no: cl.no }; await loadActs(); return renderS(); }
+  studentLogin(user);
+}
+function studentLogin(user) {
+  app.innerHTML = `<div class="phone"><div class="phead"><div><div class="t">활동 자료함</div><div class="s">${CFG.year}학년도</div></div></div>
+    <div class="login"><h2>들어가기</h2><p class="hint">선생님께 받은 접속 코드(6자리)를 써 주세요. 한 번 들어오면 이 폰에서는 다시 묻지 않아요.</p>
+      <label for="lNo">학번</label><input id="lNo" type="text" inputmode="numeric" maxlength="5" placeholder="20305" autocomplete="off">
+      <label for="lCode">접속 코드</label><input id="lCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off">
+      <button class="submit" id="lGo" style="margin-top:20px">들어가기</button><div id="lErr" class="prog" role="alert"></div>
+      <button class="tlink" id="toT">선생님이신가요?</button></div></div>`;
+  const go = async () => {
+    const no = normNo($('#lNo').value), code = $('#lCode').value.replace(/\D/g, '');
+    if (!no) return $('#lErr').textContent = '학번 다섯 자리를 써 주세요.';
+    if (code.length !== 6) return $('#lErr').textContent = '접속 코드 여섯 자리를 써 주세요.';
+    $('#lGo').disabled = true;
+    try {
+      await setDoc(doc(db, 'sm_claims', user.uid), { no, year: CFG.year, code, at: Date.now() });
+      ME = { no }; await loadActs(); renderS();
+    } catch (e) { $('#lErr').textContent = '학번이나 접속 코드가 맞지 않아요. 다시 확인해 주세요.'; $('#lGo').disabled = false; }
+  };
+  $('#lGo').onclick = go; $('#lCode').onkeydown = e => { if (e.key === 'Enter') go(); };
+  $('#toT').onclick = () => { saveLS('sm_teacher', true); location.href = location.pathname + '?t=1'; };
+}
+let MYSUBS = {};
+async function renderS() {
+  const acts = actsOfStudent(ME.no);
+  MYSUBS = {};
+  await Promise.all(acts.map(async a => { try { const s = await getDoc(doc(db, 'sm_subs', subId(a.id, ME.no))); if (s.exists()) MYSUBS[a.id] = s.data(); } catch {} }));
+  if (SV.actId) { const a = acts.find(x => x.id === SV.actId); if (a) return renderSForm(a); SV.actId = null; }
+  const todo = acts.filter(a => !MYSUBS[a.id] && !isPast(a.due)).sort((a, b) => (a.due || '9') < (b.due || '9') ? -1 : 1);
+  const done = acts.filter(a => MYSUBS[a.id]);
+  const missed = acts.filter(a => !MYSUBS[a.id] && isPast(a.due));
+  const card = (a, kind) => {
+    const s = MYSUBS[a.id], d = dday(a.due);
+    const sub = kind === 'todo' ? `${a.questions.length ? `질문 ${a.questions.length}개` : ''}${a.questions.length && a.needFile ? ' + ' : ''}${a.needFile ? 'PDF' : ''}${a.due ? ` · <span class="due">${d === 0 ? '오늘 마감' : 'D-' + d} (${a.due.slice(5).replace('-', '/')})</span>` : ''}`
+      : kind === 'done' ? `${fmtAt(s.at)} ${s.by === 'teacher' ? '선생님이 올림' : '제출'}${isPast(a.due) ? ' · 마감됨' : ' · 마감 전까지 고칠 수 있어요'}`
+      : '마감됨 · 안 냄';
+    return `<button class="pf" data-open="${a.id}" style="--c:${areaColor(a.area)}"><span class="tabl">${esc(actLabel(a))}</span><b>${esc(a.title)}</b><span>${sub}</span>${kind === 'done' ? `<div class="stamp ${s.by === 'teacher' ? 'blue' : ''}">${s.by === 'teacher' ? '대리<br>접수' : '접수'}</div>` : ''}</button>`;
+  };
+  app.innerHTML = `<div class="phone"><div class="phead"><div><div class="t">내 활동 자료함</div><div class="s">${CFG.year}학년도 · <b>${ME.no}</b></div></div><button id="sOut">나가기</button></div>
+    <div class="plist">
+      ${!acts.length ? '<div class="empty" style="margin-top:20px">아직 낼 활동이 없어요.<br>선생님이 활동을 열면 여기에 보여요.</div>' : ''}
+      ${todo.length ? `<div class="sec">낼 것 ${todo.length}</div>${todo.map(a => card(a, 'todo')).join('')}` : ''}
+      ${done.length ? `<div class="sec">낸 것 ${done.length}</div>${done.map(a => card(a, 'done')).join('')}` : ''}
+      ${missed.length ? `<div class="sec">마감 지남 ${missed.length}</div>${missed.map(a => card(a, 'missed')).join('')}` : ''}
+    </div></div>`;
+  document.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { SV.actId = b.dataset.open; history.replaceState(null, '', `?a=${SV.actId}`); renderS(); });
+  $('#sOut').onclick = async () => { if (!confirm('이 폰에서 나갈까요? 다시 들어오려면 접속 코드가 필요해요.')) return; await signOut(auth); location.href = location.pathname; };
+}
+function renderSForm(a) {
+  const s = MYSUBS[a.id];
+  const locked = isPast(a.due);
+  const dKey = `sm_draft_${a.id}_${ME.no}`;
+  const draft = loadLS(dKey, null);
+  const answers = a.questions.map((_, i) => draft?.answers?.[i] ?? s?.answers?.[i] ?? '');
+  let files = (s?.files || []).slice();
+  app.innerHTML = `<div class="phone"><div class="phead"><div><div class="t">내 활동 자료함</div><div class="s">${CFG.year}학년도 · <b>${ME.no}</b></div></div></div>
+    <div class="sform"><button class="back" id="back">← 목록</button>
+      <h2>${esc(a.title)}</h2><div class="meta">${esc(actLabel(a))}${a.due ? ` · 마감 ${fmtDue(a.due)}` : ''}</div>
+      ${s ? `<p class="warnline" style="margin-top:10px">${fmtAt(s.at)}에 ${s.by === 'teacher' ? '선생님이 올려 둔' : '낸'} 자료가 있어요.${locked ? '' : ' 고친 뒤 다시 제출하면 바뀌어요.'}</p>` : ''}
+      ${locked ? '<p class="warnline" style="margin-top:10px">마감이 지나서 고칠 수 없어요.</p>' : ''}
+      <div style="margin-top:12px">${a.questions.map((q, i) => `<div class="fq"><label for="sa${i}"><i>${i + 1}</i>${esc(q)}</label><textarea id="sa${i}" ${locked ? 'readonly' : ''} placeholder="여기에 써요">${esc(answers[i])}</textarea></div>`).join('')}
+      ${a.needFile ? `<div class="fq"><label><i>+</i>PDF 파일</label><div id="fl"></div>
+        ${locked ? '' : `<div class="drop" id="fd" role="button" tabindex="0">PDF 파일 고르기<small>PDF만 올릴 수 있어요 · 한글·PPT는 'PDF로 저장', 사진은 'PDF로 인쇄'해서 올려 주세요 · ${MAX_FILE_MB}MB까지</small></div>`}</div>` : ''}</div>
+      ${locked ? '' : '<button class="submit" id="sGo">제출하기</button><div class="saved" id="sv">쓰던 글은 이 폰에 자동 저장돼요</div>'}
+      <div id="sErr" class="prog" role="alert"></div></div></div>`;
+  $('#back').onclick = () => { SV.actId = null; history.replaceState(null, '', location.pathname); renderS(); };
+  const pending = [];
+  const drawFiles = () => {
+    const el = $('#fl'); if (!el) return;
+    el.innerHTML = [...files.map((f, i) => `<div class="file"><span class="ft">PDF</span>${esc(f.name)}<small>${f.pages ? f.pages + '쪽' : ''}</small>${locked ? '' : `<button class="btn sm ghost" data-rm="${i}" aria-label="${esc(f.name)} 빼기">빼기</button>`}</div>`),
+      ...pending.map((f, i) => `<div class="file"><span class="ft">PDF</span>${esc(f.name)}<small>제출할 때 올라가요</small><button class="btn sm ghost" data-rp="${i}">빼기</button></div>`)].join('');
+    el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { files.splice(+b.dataset.rm, 1); drawFiles(); });
+    el.querySelectorAll('[data-rp]').forEach(b => b.onclick = () => { pending.splice(+b.dataset.rp, 1); drawFiles(); });
+  };
+  drawFiles();
+  if (locked) return;
+  const saveDraft = () => saveLS(dKey, { answers: a.questions.map((_, i) => $('#sa' + i).value) });
+  a.questions.forEach((_, i) => $('#sa' + i).addEventListener('input', () => { saveDraft(); $('#sv').textContent = '이 폰에 임시 저장됨 · 제출하기를 눌러야 선생님께 가요'; }));
+  const fd = $('#fd');
+  if (fd) {
+    const add = fs => { for (const f of fs) { const e = checkPdf(f); if (e) { $('#sErr').textContent = e; continue; } $('#sErr').textContent = ''; pending.push(f); } drawFiles(); };
+    fd.onclick = async () => add(await pickFile('.pdf,application/pdf', true)); fd.onkeydown = e => { if (e.key === 'Enter') fd.click(); }; bindDrop(fd, add);
+  }
+  $('#sGo').onclick = async () => {
+    const ans = a.questions.map((_, i) => $('#sa' + i).value.trim());
+    if (a.questions.length && ans.every(x => !x) && !files.length && !pending.length) return $('#sErr').textContent = '답을 쓰거나 파일을 올려 주세요.';
+    if (a.needFile && !a.questions.length && !files.length && !pending.length) return $('#sErr').textContent = 'PDF 파일을 골라 주세요.';
+    const btn = $('#sGo'); btn.disabled = true; $('#sErr').textContent = '';
+    try {
+      const up = [];
+      for (let i = 0; i < pending.length; i++) { btn.textContent = `파일 올리는 중… ${i + 1}/${pending.length}`; up.push(await uploadPdf(pending[i], a, ME.no)); }
+      const removed = (s?.files || []).filter(f => !files.some(x => x.id === f.id));
+      btn.textContent = '제출하는 중…';
+      await setDoc(doc(db, 'sm_subs', subId(a.id, ME.no)), { activityId: a.id, no: ME.no, year: CFG.year, area: a.area, subject: a.subject || '', answers: ans, extra: s?.extra || [], files: [...files, ...up], by: 'student', via: '', at: Date.now() });
+      for (const f of removed) { try { await callScript({ action: 'trash', id: f.id, no: ME.no }); } catch {} }
+      try { localStorage.removeItem(dKey); } catch {}
+      toast('제출했어요'); SV.actId = null; history.replaceState(null, '', location.pathname); renderS();
+    } catch (e) { $('#sErr').textContent = '제출하지 못했어요: ' + e.message + ' (쓴 글은 이 폰에 남아 있어요)'; btn.disabled = false; btn.textContent = '제출하기'; }
+  };
+}
+</script>
+</body>
+</html>
